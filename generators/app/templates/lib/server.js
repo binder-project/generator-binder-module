@@ -10,7 +10,7 @@ function <%= className %> (opts) {
     return new <%= className %>(opts)
   }
   this.opts = opts
-  this.name = <%= name %>
+  this.name = '<%= name %>'
   BinderModule.call(this)
 }
 
@@ -19,7 +19,7 @@ inherits(<%= className %>, BinderModule)
 /**
  * Attached module's routes/handlers to the main app object
  */
-<%= className %>.prototype.makeRoutes = function (app, authHandler) {
+<%= className %>.prototype._makeRoutes = function (app, authHandler) {
   // TODO: routes/handlers go here
 }
 
