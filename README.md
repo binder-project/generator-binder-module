@@ -1,4 +1,4 @@
-# generator-binder-module [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-binder-module [![NPM version][npm-image]][npm-url]
 > Generator for Binder modules
 
 ## Installation
