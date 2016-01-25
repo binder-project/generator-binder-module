@@ -17,18 +17,10 @@ function <%= className %> (opts) {
 inherits(<%= className %>, BinderModule)
 
 /**
- * Generatees the modules routes/handlers
+ * Attached module's routes/handlers to the main app object
  */
-<%= className %>.prototype.makeRoutes = function (authHandler) {
+<%= className %>.prototype.makeRoutes = function (app, authHandler) {
   // TODO: routes/handlers go here
-}
-
-/**
- * Generates the background tasks that will be launched by this module
- */
-<%= className %>.prototype._makeBackgroundTasks = function () {
-  // TODO: add background tasks
-  return []
 }
 
 /**
