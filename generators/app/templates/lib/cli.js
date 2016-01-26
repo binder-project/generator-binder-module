@@ -73,7 +73,7 @@ var setupProgram = function (commands, program) {
   })
 }
 
-var pm2CLI = function (commands, program) {
+var pm2CLI = function (program) {
   if (!program) {
     program = require('commander')
   }
@@ -89,7 +89,7 @@ var pm2CLI = function (commands, program) {
   setupProgram(pm2Commands, program)
 }
 
-var standaloneCLI = function (commands, program) {
+var standaloneCLI = function (program) {
   if (!program) {
     program = require('commander')
   }
@@ -97,11 +97,10 @@ var standaloneCLI = function (commands, program) {
 }
 
 if (require.main === module) {
-  var program = standaloneCLI(commands)
+  var program = standaloneCLI()
   program.parse(process.argv)
 } else {
   module.exports = {
-    commands: commands,
     standaloneCLI: standaloneCLI,
     pm2CLI: pm2CLI
   }

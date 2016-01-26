@@ -56,6 +56,7 @@ module.exports = yeoman.generators.Base.extend({
       'conf/main.json',
       'lib/server.js',
       'lib/cli.js',
+      'lib/settings.js',
       'test/all.js',
       'start.js',
       'index.js'
