@@ -57,7 +57,8 @@ module.exports = yeoman.generators.Base.extend({
       'lib/server.js',
       'lib/cli.js',
       'test/all.js',
-      'start.js'
+      'start.js',
+      'index.js'
     ]
     _.forEach(files, function (file) {
       self.fs.copyTpl(
