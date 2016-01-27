@@ -39,7 +39,7 @@ var makeCommands = function () {
         .option('-p, --port', 'the <%= name %> server port')
       return program
     }, function (options) {
-      console.log('running START')
+      console.log('Starting the <%= name %> server...')
       var opts = {}
       if (options.config) {
         _.merge(opts, JSON.parse(fs.readFileSync(options.config)))
@@ -56,7 +56,6 @@ var makeCommands = function () {
         .description('Stop the <%= name %> server')
       return program
     }, function (options) {
-      console.log('running STOP')
       console.log('Stopping the <%= name %> server...')
       shell.exec(['pm2', 'stop', '<%= name %>'])
     })
