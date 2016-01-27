@@ -19,24 +19,29 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'name',
       message: 'What is your Binder module\'s name?',
-      default: this.appname
+      default: this.appname,
+      store: true
     }, {
       type: 'input',
       name: 'description',
       message: 'What is the description for your Binder module?',
-      default: 'A Binder module'
+      default: 'A Binder module',
+      store: true
     }, {
       type: 'input',
       name: 'author',
-      message: 'What is your name?'
+      message: 'What is your name?',
+      store: true
     }, {
       type: 'input',
       name: 'email',
-      message: 'What is your email address?'
+      message: 'What is your email address?',
+      store: true
     }, {
       type: 'input',
       name: 'website',
-      message: 'What is your website?'
+      message: 'What is your website?',
+      store: true
     }]
 
     this.prompt(prompts, function (props) {

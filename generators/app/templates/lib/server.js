@@ -1,17 +1,18 @@
 var BinderModule = require('binder-module')
 var inherits = require('inherits')
 
+var settings = require('./settings.js')
+
 /*
  * An HTTP server that implements the API of a Binder component
  * @constructor
  */
 function <%= className %> (opts) {
-  if (!this instanceof <%= className %>) {
+  if (!(this instanceof <%= className %>)) {
     return new <%= className %>(opts)
   }
-  this.opts = opts
-  this.name = '<%= name %>'
-  BinderModule.call(this)
+  <%= className %>.super_.call(this, settings, opts)  
+  // TODO: initialization here
 }
 
 inherits(<%= className %>, BinderModule)

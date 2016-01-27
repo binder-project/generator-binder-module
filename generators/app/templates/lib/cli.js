@@ -1,6 +1,9 @@
 var _ = require('lodash')
+var fs = require('fs')
 var shell = require('shelljs')
+var path = require('path')
 
+var startWithPM2 = require('binder-utils').startWithPM2
 var Module = require('./server.js')
 
 /**
@@ -28,48 +31,47 @@ Command.prototype.makeAction = function (program) {
   return program
 }
 
-var commands = [
-  Command('start', function (program) {
-    program
-      .description('Start the <%= name %> server')
-      .option('-p, --port', 'the <%= name %> server port')
-    return program
-  }, function (options) {
-    var module = new Module(options)
-    module.start()
-  }),
-  Command('stop', function (program) {
-    program.description('Stop the <%= name %> server')
-    return program
-  }, function (options) {
-    console.log('Stopping the <%= name %> server...')
-    shell.exec(['pm2', 'stop', '<%= name %>'])
-  })
-  // TODO: add any module-specific commands here
-]
-
-var startWithPM2 = function (app) {
-  pm2.connect(function (err) {
-    if (err) {
-      console.error(err)
-      process.exit(2)
-    }
-    pm2.start(app, function (err, apps) {
-      if (err) {
-        console.error(err)
+var makeCommands = function () {
+  var commands = [
+    Command('start', function (program) {
+      program
+        .description('Start the <%= name %> server')
+        .option('-p, --port', 'the <%= name %> server port')
+      return program
+    }, function (options) {
+      console.log('running START')
+      var opts = {}
+      if (options.config) {
+        _.merge(opts, JSON.parse(fs.readFileSync(options.config)))
+      } if (options.port) {
+        opts.port = options.port
+      } if (options.apiKey) {
+        opts.apiKey = options.apiKey
       }
-      pm2.disconnect()
+      var module = new Module(opts)
+      module.start()
+    }),
+    Command('stop', function (program) {
+      program
+        .description('Stop the <%= name %> server')
+      return program
+    }, function (options) {
+      console.log('running STOP')
+      console.log('Stopping the <%= name %> server...')
+      shell.exec(['pm2', 'stop', '<%= name %>'])
     })
-  })
+    // TODO: add any module-specific commands here
+  ]
+  return commands
 }
 
 var setupProgram = function (commands, program) {
   program.option('-a, --apiKey', 'Binder API key')
-  program.options('-c, --config', 'Module configuration file')
+  program.option('-c, --config', 'Module configuration file')
   _.forEach(commands, function (cmd) {
-    program.command(cmd.name)
-    cmd.cli(program)
-    program.action(cmd.action)
+    var command = program.command(cmd.name)
+    command = cmd.cli(command)
+    command.action(cmd.action)
   })
 }
 
@@ -78,22 +80,26 @@ var pm2CLI = function (program) {
     program = require('commander')
   }
   // Replace all actions with PM2 subprocess creation
-  var pm2Commands = _.map(commands, function (cmd) {
+  var pm2Commands = _.map(makeCommands(), function (cmd) {
     cmd.action = function (options) {
       startWithPM2({
-        script: './lib/cli.js',
-        args: process.argv
+        name: '<%= name %>-' + cmd.name,
+        script: path.join(__dirname, 'cli.js'),
+        args: process.argv.slice(2)
       })
     }
+    return cmd
   })
   setupProgram(pm2Commands, program)
+  return program
 }
 
 var standaloneCLI = function (program) {
   if (!program) {
     program = require('commander')
   }
-  setupProgram(commands, program)
+  setupProgram(makeCommands(), program)
+  return program
 }
 
 if (require.main === module) {
